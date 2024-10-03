@@ -13,12 +13,11 @@
 
         body, html {
             height: 100%;
-            font-family: 'Roboto', sans-serif;
             overflow: hidden;
-            background-color: #111;
+            font-family: 'Arial', sans-serif;
         }
 
-        /* 背景动画 */
+        /* 背景图片与整体调色 */
         body::before {
             content: '';
             position: absolute;
@@ -28,275 +27,199 @@
             bottom: 0;
             background: url("https://api.gumengya.com/Api/FjImg?format=image") no-repeat center center fixed;
             background-size: cover;
-            filter: blur(20px) brightness(0.7);
             z-index: -1;
+            filter: blur(4px) brightness(0.6);
         }
 
-        .content-wrapper {
+        .container {
             height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            color: white;
             text-align: center;
-            opacity: 0;
-            animation: fadeIn 3s ease-in-out forwards;
+            padding: 20px;
+            animation: fadeIn 2s ease-in-out;
         }
 
         .title {
-            font-size: 4em;
-            color: white;
-            letter-spacing: 10px;
+            font-size: 5em;
+            letter-spacing: 5px;
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
-            animation: titleEffect 6s infinite ease-in-out;
+            margin-bottom: 30px;
         }
 
-        @keyframes titleEffect {
-            0%, 100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.8); }
-            50% { text-shadow: 0 0 50px rgba(255, 255, 255, 1); }
+        .subtitle {
+            font-size: 2em;
+            margin-top: 10px;
+            color: rgba(255, 255, 255, 0.8);
         }
 
-        /* 高级渐入动画 */
+        /* 缓动加载动画 */
         @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* 奇怪的东西 - 高级的旋转球动画 */
-        .weird-ball {
-            position: relative;
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(0,212,255,1) 100%);
-            animation: rotateBall 6s infinite linear;
-        }
-
-        @keyframes rotateBall {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .ball-orbits {
-            display: flex;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .ball-orbit {
-            position: relative;
-            width: 250px;
-            height: 250px;
-            border: 2px dashed rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            animation: orbit 10s infinite ease-in-out;
-        }
-
-        @keyframes orbit {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .orbit-item {
-            position: absolute;
-            top: 0;
+        /* 分页控制器 */
+        .pagination {
+            position: fixed;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            width: 20px;
-            height: 20px;
-            background-color: rgba(255, 255, 255, 0.7);
-            border-radius: 50%;
-            animation: orbitItem 5s infinite ease-in-out;
-        }
-
-        @keyframes orbitItem {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.5); }
-            100% { transform: scale(1); }
-        }
-
-        /* 高级按钮效果 */
-        .button-group {
-            margin-top: 50px;
             display: flex;
-            gap: 20px;
+            justify-content: space-between;
+            width: 200px;
         }
 
-        .button {
-            padding: 15px 30px;
-            font-size: 1.2em;
+        .pagination button {
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
             color: white;
-            background: rgba(0, 212, 255, 0.3);
             border: none;
-            border-radius: 10px;
             cursor: pointer;
-            transition: transform 0.3s ease-in-out;
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            transition: background-color 0.3s ease;
         }
 
-        .button:hover {
-            transform: scale(1.1) rotate(-5deg);
-            box-shadow: 0 0 30px rgba(0, 212, 255, 1);
+        .pagination button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
         }
 
-        .footer {
-            position: absolute;
-            bottom: 20px;
-            width: 100%;
-            text-align: center;
-            color: white;
-            font-size: 1.2em;
-            animation: fadeIn 6s ease-in-out;
-        }
-
-        /* 多层次加载动画 */
-        .loading-overlay {
+        /* 页面内容部分 */
+        .content {
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.9);
+            width: 100%;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 100;
+            flex-direction: column;
+            transition: transform 1s ease;
         }
 
-        .loading-overlay .loading-circle {
-            width: 80px;
-            height: 80px;
-            border: 10px solid rgba(0, 212, 255, 0.3);
-            border-top: 10px solid rgba(0, 212, 255, 1);
-            border-radius: 50%;
-            animation: spin 2s linear infinite;
+        .content.page2 {
+            background-color: rgba(34, 139, 34, 0.8); /* 绿调 */
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .content.page3 {
+            background-color: rgba(255, 223, 0, 0.8); /* 黄调 */
         }
 
-        /* 移除加载层 */
-        body.loaded .loading-overlay {
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 2s ease-in-out;
+        .content.active {
+            transform: translateX(0);
         }
 
-        /* 鼠标悬浮光圈 */
-        .mouse-circle {
+        .content.left {
+            transform: translateX(-100%);
+        }
+
+        .content.right {
+            transform: translateX(100%);
+        }
+
+        /* 翻页提示动画 */
+        .page-hint {
             position: fixed;
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 2px solid rgba(0, 212, 255, 0.5);
-            pointer-events: none;
-            z-index: 999;
-            transform: translate(-50%, -50%);
-            animation: glow 2s infinite alternate ease-in-out;
+            bottom: 50px;
+            font-size: 1em;
+            color: rgba(255, 255, 255, 0.5);
+            animation: fadeIn 3s ease-out forwards, pulse 1.5s ease infinite;
         }
 
-        @keyframes glow {
-            0% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.5); }
-            100% { box-shadow: 0 0 40px rgba(0, 212, 255, 1); }
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
-
-        /* 页面滚动效果 */
-        .scroll-message {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            color: white;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 1.2em;
-            opacity: 0;
-            animation: fadeOut 10s ease-in-out;
-        }
-
-        @keyframes fadeOut {
-            0% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-
     </style>
 </head>
 <body>
-    <!-- 加载动画 -->
-    <div class="loading-overlay">
-        <div class="loading-circle"></div>
-    </div>
-
-    <!-- 鼠标光圈 -->
-    <div class="mouse-circle"></div>
-
-    <!-- 滚动提示 -->
-    <div class="scroll-message">滚动探索更多内容...</div>
-
-    <!-- 内容部分 -->
-    <div class="content-wrapper">
-        <div class="title">AetherView</div>
-
-        <!-- 奇怪的旋转球和轨道 -->
-        <div class="ball-orbits">
-            <div class="ball-orbit">
-                <div class="orbit-item"></div>
-            </div>
-            <div class="weird-ball"></div>
-        </div>
-
-        <!-- 高级按钮 -->
-        <div class="button-group">
-            <button class="button">进入虚空</button>
-            <button class="button">探索无限</button>
-            <button class="button">启动奇点</button>
+    <!-- 第一页内容 -->
+    <div class="content page1 active">
+        <div class="container">
+            <div class="title">AetherView</div>
+            <div class="subtitle">The Rift Between Realities</div>
         </div>
     </div>
 
-    <!-- 页脚 -->
-    <div class="footer">AetherView © 2024 - 探索超越的可能性</div>
+    <!-- 第二页内容 -->
+    <div class="content page2">
+        <div class="container">
+            <div class="title">Nature's Symphony</div>
+            <div class="subtitle">Feel the harmony of green</div>
+        </div>
+    </div>
+
+    <!-- 第三页内容 -->
+    <div class="content page3">
+        <div class="container">
+            <div class="title">Golden Horizon</div>
+            <div class="subtitle">Explore the yellow rays of dawn</div>
+        </div>
+    </div>
+
+    <!-- 翻页按钮 -->
+    <div class="pagination">
+        <button id="prevPage">← 上一页</button>
+        <button id="nextPage">下一页 →</button>
+    </div>
+
+    <!-- 翻页提示 -->
+    <div class="page-hint">用上下翻页探索更多...</div>
 
     <script>
-        // 模拟加载过程
-        window.addEventListener('load', function () {
-            setTimeout(function() {
-                document.body.classList.add('loaded');
-            }, 3000);
-        });
+        let currentPage = 1;
+        const totalPages = 3;
 
-        // 鼠标移动时光圈跟随
-        document.addEventListener('mousemove', function (e) {
-            const mouseCircle = document.querySelector('.mouse-circle');
-            mouseCircle.style.left = e.pageX + 'px';
-            mouseCircle.style.top = e.pageY + 'px';
-        });
+        function updatePages() {
+            for (let i = 1; i <= totalPages; i++) {
+                const page = document.querySelector('.page' + i);
+                if (i === currentPage) {
+                    page.classList.add('active');
+                    page.classList.remove('left', 'right');
+                } else if (i < currentPage) {
+                    page.classList.add('left');
+                    page.classList.remove('active', 'right');
+                } else {
+                    page.classList.add('right');
+                    page.classList.remove('active', 'left');
+                }
+            }
+        }
 
-        // 滚动提示淡出
-        setTimeout(() => {
-            const scrollMessage = document.querySelector('.scroll-message');
-            scrollMessage.style.opacity = '0';
-        }, 5000);
-
-        // 按钮点击事件
-        document.querySelectorAll('.button').forEach(button => {
-            button.addEventListener('click', function () {
-                alert('你点击了按钮: ' + this.textContent);
-            });
-        });
-
-        // 页面滚动事件
-        window.addEventListener('scroll', function () {
-            const scrollY = window.scrollY;
-            if (scrollY > 100) {
-                document.querySelector('.title').style.transform = `scale(${1 + scrollY / 500})`;
-                document.querySelector('.title').style.opacity = `${1 - scrollY / 1000}`;
+        document.getElementById('prevPage').addEventListener('click', function () {
+            if (currentPage > 1) {
+                currentPage--;
+                updatePages();
             }
         });
 
+        document.getElementById('nextPage').addEventListener('click', function () {
+            if (currentPage < totalPages) {
+                currentPage++;
+                updatePages();
+            }
+        });
+
+        updatePages();
     </script>
 </body>
 </html>
