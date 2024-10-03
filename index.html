@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AetherView</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            overflow: hidden;
+            background-color: #111;
+        }
+
+        /* 背景动画 */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("https://api.gumengya.com/Api/FjImg?format=image") no-repeat center center fixed;
+            background-size: cover;
+            filter: blur(20px) brightness(0.7);
+            z-index: -1;
+        }
+
+        .content-wrapper {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 3s ease-in-out forwards;
+        }
+
+        .title {
+            font-size: 4em;
+            color: white;
+            letter-spacing: 10px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            animation: titleEffect 6s infinite ease-in-out;
+        }
+
+        @keyframes titleEffect {
+            0%, 100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.8); }
+            50% { text-shadow: 0 0 50px rgba(255, 255, 255, 1); }
+        }
+
+        /* 高级渐入动画 */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* 奇怪的东西 - 高级的旋转球动画 */
+        .weird-ball {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(0,212,255,1) 100%);
+            animation: rotateBall 6s infinite linear;
+        }
+
+        @keyframes rotateBall {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .ball-orbits {
+            display: flex;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .ball-orbit {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            border: 2px dashed rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: orbit 10s infinite ease-in-out;
+        }
+
+        @keyframes orbit {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .orbit-item {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            animation: orbitItem 5s infinite ease-in-out;
+        }
+
+        @keyframes orbitItem {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.5); }
+            100% { transform: scale(1); }
+        }
+
+        /* 高级按钮效果 */
+        .button-group {
+            margin-top: 50px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            color: white;
+            background: rgba(0, 212, 255, 0.3);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .button:hover {
+            transform: scale(1.1) rotate(-5deg);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 1);
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            animation: fadeIn 6s ease-in-out;
+        }
+
+        /* 多层次加载动画 */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .loading-overlay .loading-circle {
+            width: 80px;
+            height: 80px;
+            border: 10px solid rgba(0, 212, 255, 0.3);
+            border-top: 10px solid rgba(0, 212, 255, 1);
+            border-radius: 50%;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 移除加载层 */
+        body.loaded .loading-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 2s ease-in-out;
+        }
+
+        /* 鼠标悬浮光圈 */
+        .mouse-circle {
+            position: fixed;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 212, 255, 0.5);
+            pointer-events: none;
+            z-index: 999;
+            transform: translate(-50%, -50%);
+            animation: glow 2s infinite alternate ease-in-out;
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.5); }
+            100% { box-shadow: 0 0 40px rgba(0, 212, 255, 1); }
+        }
+
+        /* 页面滚动效果 */
+        .scroll-message {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            opacity: 0;
+            animation: fadeOut 10s ease-in-out;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+    <!-- 加载动画 -->
+    <div class="loading-overlay">
+        <div class="loading-circle"></div>
+    </div>
+
+    <!-- 鼠标光圈 -->
+    <div class="mouse-circle"></div>
+
+    <!-- 滚动提示 -->
+    <div class="scroll-message">滚动探索更多内容...</div>
+
+    <!-- 内容部分 -->
+    <div class="content-wrapper">
+        <div class="title">AetherView</div>
+
+        <!-- 奇怪的旋转球和轨道 -->
+        <div class="ball-orbits">
+            <div class="ball-orbit">
+                <div class="orbit-item"></div>
+            </div>
+            <div class="weird-ball"></div>
+        </div>
+
+        <!-- 高级按钮 -->
+        <div class="button-group">
+            <button class="button">进入虚空</button>
+            <button class="button">探索无限</button>
+            <button class="button">启动奇点</button>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <div class="footer">AetherView © 2024 - 探索超越的可能性</div>
+
+    <script>
+        // 模拟加载过程
+        window.addEventListener('load', function () {
+            setTimeout(function() {
+                document.body.classList.add('loaded');
+            }, 3000);
+        });
+
+        // 鼠标移动时光圈跟随
+        document.addEventListener('mousemove', function (e) {
+            const mouseCircle = document.querySelector('.mouse-circle');
+            mouseCircle.style.left = e.pageX + 'px';
+            mouseCircle.style.top = e.pageY + 'px';
+        });
+
+        // 滚动提示淡出
+        setTimeout(() => {
+            const scrollMessage = document.querySelector('.scroll-message');
+            scrollMessage.style.opacity = '0';
+        }, 5000);
+
+        // 按钮点击事件
+        document.querySelectorAll('.button').forEach(button => {
+            button.addEventListener('click', function () {
+                alert('你点击了按钮: ' + this.textContent);
+            });
+        });
+
+        // 页面滚动事件
+        window.addEventListener('scroll', function () {
+            const scrollY = window.scrollY;
+            if (scrollY > 100) {
+                document.querySelector('.title').style.transform = `scale(${1 + scrollY / 500})`;
+                document.querySelector('.title').style.opacity = `${1 - scrollY / 1000}`;
+            }
+        });
+
+    </script>
+</body>
+</html>
